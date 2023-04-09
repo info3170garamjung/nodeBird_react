@@ -61,7 +61,7 @@ export const getStaticProps = wrapper.getStaticProps(async (context) => {
   await context.store.sagaTask.toPromise();
 });
 */
-
+/* 여기 주석처리
 export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   console.log('getStaticProps');
   store.dispatch({
@@ -71,5 +71,5 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });
-
+*/
 export default About;

@@ -21,6 +21,8 @@ const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const postsRouter = require('./routes/posts');
 const postRouter = require('./routes/post');
@@ -41,12 +43,21 @@ db.sequelize.sync()
 
   passportConfig();
 
-  app.use(morgan('dev'));
+  if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined')); // 로그가 자세해짐 (접속자의 IP..)
+    app.use(hpp()); // 보안 
+    app.use(helmet()); // 보안
+
+  } else {
+    app.use(morgan('dev'));
+  }
+
   app.use(cors({
     //origin: 'https://nodebird.com'
   //  origin: 'http://localhost:3060', // or true
-    origin: true,
+   // origin: true,
     // origin: true로 설정해두면 * 대신 보낸곳의 주소가 자동으로 들어감
+    origin: ['http://localhost:3060', 'nodebird.com'],
     credentials: true, // cookie 같이 전달
   }));
 

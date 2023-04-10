@@ -213,8 +213,8 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST 
 router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => { // POST /post/images
   console.log(req.files); // 업로드된 이미지에 대한 정보
 //  res.json(req.files.map((v) => v.filename)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
-  res.json(req.files.map((v) => v.location)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
-
+  //res.json(req.files.map((v) => v.location)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
+  res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
 });
 
 

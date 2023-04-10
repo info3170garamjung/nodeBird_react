@@ -57,7 +57,7 @@ db.sequelize.sync()
   //  origin: 'http://localhost:3060', // or true
    // origin: true,
     // origin: true로 설정해두면 * 대신 보낸곳의 주소가 자동으로 들어감
-    origin: ['http://localhost:3060', 'nodebird.com', 'http://13.125.147.98'],
+    origin: [true, 'nodebird.com', 'http://13.125.147.98'],
     credentials: true, // cookie 같이 전달
   }));
 

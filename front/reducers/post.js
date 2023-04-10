@@ -257,7 +257,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadImagesError = null;
       break;
     case UPLOAD_IMAGES_SUCCESS: {
-      draft.imagePaths = action.data; // imagePaths에 파일명이 저장됨
+      draft.imagePaths = draft.imagePaths.concat(action.data); // imagePaths에 파일명이 저장됨
       draft.uploadImagesLoading = false;
       draft.uploadImagesDone = true;
       break;

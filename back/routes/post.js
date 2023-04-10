@@ -5,6 +5,8 @@ const path = require('path');
 const { Post, Image, Comment, User, Hashtag } = require('../models');
 const router = express.Router();
 const { isLoggedIn } = require('./middlewares');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 try {
 fs.accessSync('uploads'); // uploads 폴더 있는지 검사
@@ -13,6 +15,24 @@ fs.accessSync('uploads'); // uploads 폴더 있는지 검사
   fs.mkdirSync('uploads'); // uploads폴더 생성
 }
 
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2',
+})
+
+const upload = multer({
+  storage: multerS3({
+    s3: new AWS.S3(), // 권한
+    bucket: 'nodebird-react-s3', // 버킷이름
+    key(req, file, cb) { // key 저장되는 파일이름
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  }),
+  limits: { fileSize: 20 * 1024 * 1024}, // 20MB
+});
+
+/*
 const upload = multer({ 
   storage: multer.diskStorage({ // 컴퓨터 하드디스크
     destination(req, file, done) {
@@ -26,7 +46,7 @@ const upload = multer({
   }),
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
-
+*/
 
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST /post
   try {
@@ -192,7 +212,9 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST 
 // 순서 : Login 체크 -> upload를 여기서 올려줌  (req, res, next)는 이미지 업로드 후에 실행
 router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => { // POST /post/images
   console.log(req.files); // 업로드된 이미지에 대한 정보
-  res.json(req.files.map((v) => v.filename)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
+//  res.json(req.files.map((v) => v.filename)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
+  res.json(req.files.map((v) => v.location)); // 어디로 업로드됬는지 파일명등이 프론트로 보내짐
+
 });
 
 

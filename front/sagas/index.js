@@ -3,7 +3,9 @@ import axios from 'axios';
 import postSaga from './post';
 import userSaga from './user';
 
-axios.defaults.baseURL = 'http://localhost:3065';
+import { backUrl } from '../config/config';
+//axios.defaults.baseURL = 'http://localhost:3065';
+axios.defaults.baseURL = backUrl;
 axios.defaults.withCredentials = true; // saga에서 보내는 axios 요청에 적용
 // conbineReducer 필요없음
 export default function* rootSaga() {
